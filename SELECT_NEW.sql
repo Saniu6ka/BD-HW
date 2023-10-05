@@ -1,8 +1,7 @@
 --задание №2
 SELECT name, duration
 FROM track
-ORDER BY duration DESC 
-LIMIT 1;
+WHERE duration = (SELECT MAX(duration) FROM track);
 
 SELECT name, duration
 FROM Track 
@@ -18,7 +17,7 @@ WHERE name NOT LIKE '% %';
 
 SELECT name 
 FROM Track 
-WHERE name LIKE '%My%';
+WHERE name ILIKE '%My%';
 
 --задание №3
 SELECT G.name AS genre, COUNT(P.id) AS number_of_performers
@@ -39,9 +38,10 @@ GROUP BY a.name ;
 
 SELECT p.name AS performer_name
 FROM performer p
-LEFT JOIN performeralbums pa ON p.id = pa.performerid
-LEFT JOIN albums a ON pa.albumid = a.id
-WHERE a.release IS NULL OR a.release < 2020 OR a.release >= 2021;
+WHERE p.id NOT IN(SELECT DISTINCT pa.performerid 
+FROM performeralbums pa 
+INNER JOIN albums a ON pa.albumid = a.id 
+WHERE (A.release < 20200101 OR A.release >= 20210101));
 
 
 SELECT c.name AS collection_name
